@@ -13,7 +13,11 @@ class Cityflow(gym.Env):
         #open cityflow roadnet file into dict
         self.roadnetDict = json.load(open(self.configDict['dir'] + self.configDict['roadnetFile']))
         
+        print(self.roadnetDict['intersections'][0]['id'])
+        print(len(self.roadnetDict['intersections'][0]['trafficLight']['lightphases']))
+
         eng = cityflow.Engine(configPath, thread_num=1)
+
         raise NotImplementedError
 
     def step(self, action):
