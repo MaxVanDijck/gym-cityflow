@@ -12,9 +12,16 @@ class Cityflow(gym.Env):
         self.configDict = json.load(open(configPath))
         #open cityflow roadnet file into dict
         self.roadnetDict = json.load(open(self.configDict['dir'] + self.configDict['roadnetFile']))
-        
-        print(self.roadnetDict['intersections'][0]['id'])
-        print(len(self.roadnetDict['intersections'][0]['trafficLight']['lightphases']))
+
+        # create dict of controllable intersections and number of light phases
+        self.intersections = {}
+        for i in range(len(self.roadnetDict['intersections'])):
+            # check if intersection is controllable
+            if self.roadnetDict['intersections'][i]['virtual'] == False:
+                # add intersection to dict where key = intersection_id and value = num of lightphases
+                self.intersections[self.roadnetDict['intersections'][i]['id']] = len(self.roadnetDict['intersections'][i]['trafficLight']['lightphases'])
+
+        print(self.intersections)
 
         eng = cityflow.Engine(configPath, thread_num=1)
 
