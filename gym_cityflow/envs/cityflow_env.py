@@ -23,7 +23,17 @@ class Cityflow(gym.Env):
 
         print(self.intersections)
 
+        print(self.roadnetDict['intersections'][5]['roadLinks'][0]['type'])
+        print(self.roadnetDict['intersections'][5]['roadLinks'][0]['startRoad'])
+
         eng = cityflow.Engine(configPath, thread_num=1)
+
+        for i in range(1000):
+            eng.next_step()
+
+        self.lane_waiting_vehicles_dict = eng.get_lane_waiting_vehicle_count()
+        #print(self.lane_waiting_vehicles_dict)
+
 
         raise NotImplementedError
 
