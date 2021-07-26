@@ -18,13 +18,21 @@ class Cityflow(gym.Env):
         for i in range(len(self.roadnetDict['intersections'])):
             # check if intersection is controllable
             if self.roadnetDict['intersections'][i]['virtual'] == False:
-                # add intersection to dict where key = intersection_id and value = num of lightphases
+                # add intersection to dict where key = intersection_id
+                # value = lightPhases
                 self.intersections[self.roadnetDict['intersections'][i]['id']] = len(self.roadnetDict['intersections'][i]['trafficLight']['lightphases'])
+                for i in range(10):
+                    i = i
 
-        print(self.intersections)
+        
+        
 
-        print(self.roadnetDict['intersections'][5]['roadLinks'][0]['type'])
-        print(self.roadnetDict['intersections'][5]['roadLinks'][0]['startRoad'])
+        print(self.roadnetDict['intersections'][5]['roadLinks'][1]['type'])
+        print(self.roadnetDict['intersections'][5]['roadLinks'][1]['startRoad'])
+        print(self.roadnetDict['intersections'][5]['roadLinks'][1]['endRoad'])
+        print(self.roadnetDict['intersections'][5]['roadLinks'][1]['laneLinks'][0]['startLaneIndex'])
+
+        testLane = self.roadnetDict['intersections'][5]['roadLinks'][1]['startRoad'] + '_' + str(self.roadnetDict['intersections'][5]['roadLinks'][1]['laneLinks'][0]['startLaneIndex'])
 
         eng = cityflow.Engine(configPath, thread_num=1)
 
@@ -32,7 +40,9 @@ class Cityflow(gym.Env):
             eng.next_step()
 
         self.lane_waiting_vehicles_dict = eng.get_lane_waiting_vehicle_count()
-        #print(self.lane_waiting_vehicles_dict)
+        print(self.lane_waiting_vehicles_dict[testLane])
+        self.waitingDict = eng.get_lane_vehicles()
+        print(eng.get_vehicle_info("flow_1_0"))
 
 
         raise NotImplementedError
