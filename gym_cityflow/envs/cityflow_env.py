@@ -21,8 +21,23 @@ class Cityflow(gym.Env):
                 # for each roadLink in intersection store incoming lanes and outgoing lanes in lists
                 incomingLanes = []
                 outgoingLanes = []
+                directions = []
                 for j in range(len(self.roadnetDict['intersections'][i]['roadLinks'])):
+                    incomingRoads = []
+                    outgoingRoads = []
+                    directions.append(self.roadnetDict['intersections'][i]['roadLinks'][j]['direction'])
                     for k in range(len(self.roadnetDict['intersections'][i]['roadLinks'][j]['laneLinks'])):
+                        incomingRoads.append(self.roadnetDict['intersections'][i]['roadLinks'][j]['startRoad'] + 
+                                            '_' + 
+                                            str(self.roadnetDict['intersections'][i]['roadLinks'][j]['laneLinks'][k]['startLaneIndex']))
+                        outgoingRoads.append(self.roadnetDict['intersections'][i]['roadLinks'][j]['endRoad'] + 
+                                            '_' + 
+                                            str(self.roadnetDict['intersections'][i]['roadLinks'][j]['laneLinks'][k]['endLaneIndex']))
+                    incomingLanes.append(incomingRoads)
+                    outgoingLanes.append(outgoingRoads)
+                print(incomingLanes)
+                print(outgoingLanes)
+                print(directions)
 
                 # add intersection to dict where key = intersection_id
                 # value = lightPhases
