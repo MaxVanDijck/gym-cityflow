@@ -18,18 +18,25 @@ class Cityflow(gym.Env):
         for i in range(len(self.roadnetDict['intersections'])):
             # check if intersection is controllable
             if self.roadnetDict['intersections'][i]['virtual'] == False:
+                # for each roadLink in intersection store incoming lanes and outgoing lanes in lists
+                incomingLanes = []
+                outgoingLanes = []
+                for j in range(len(self.roadnetDict['intersections'][i]['roadLinks'])):
+                    for k in range(len(self.roadnetDict['intersections'][i]['roadLinks'][j]['laneLinks'])):
+
                 # add intersection to dict where key = intersection_id
                 # value = lightPhases
                 self.intersections[self.roadnetDict['intersections'][i]['id']] = len(self.roadnetDict['intersections'][i]['trafficLight']['lightphases'])
-                for i in range(10):
-                    i = i
+                
+
 
         
         
-
+        print(len(self.roadnetDict['intersections'][5]['roadLinks']))
         print(self.roadnetDict['intersections'][5]['roadLinks'][1]['type'])
         print(self.roadnetDict['intersections'][5]['roadLinks'][1]['startRoad'])
         print(self.roadnetDict['intersections'][5]['roadLinks'][1]['endRoad'])
+        print(len(self.roadnetDict['intersections'][5]['roadLinks'][1]['laneLinks']))
         print(self.roadnetDict['intersections'][5]['roadLinks'][1]['laneLinks'][0]['startLaneIndex'])
 
         testLane = self.roadnetDict['intersections'][5]['roadLinks'][1]['startRoad'] + '_' + str(self.roadnetDict['intersections'][5]['roadLinks'][1]['laneLinks'][0]['startLaneIndex'])
