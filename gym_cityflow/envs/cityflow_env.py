@@ -18,7 +18,7 @@ class Cityflow(gym.Env):
         for i in range(len(self.roadnetDict['intersections'])):
             # check if intersection is controllable
             if self.roadnetDict['intersections'][i]['virtual'] == False:
-                # for each roadLink in intersection store incoming lanes and outgoing lanes in lists
+                # for each roadLink in intersection store incoming lanes, outgoing lanes and direction in lists
                 incomingLanes = []
                 outgoingLanes = []
                 directions = []
@@ -35,37 +35,28 @@ class Cityflow(gym.Env):
                                             str(self.roadnetDict['intersections'][i]['roadLinks'][j]['laneLinks'][k]['endLaneIndex']))
                     incomingLanes.append(incomingRoads)
                     outgoingLanes.append(outgoingRoads)
-                print(incomingLanes)
-                print(outgoingLanes)
-                print(directions)
 
                 # add intersection to dict where key = intersection_id
-                # value = lightPhases
-                self.intersections[self.roadnetDict['intersections'][i]['id']] = len(self.roadnetDict['intersections'][i]['trafficLight']['lightphases'])
+                # value = no of lightPhases, incoming lane names, outgoing lane names, directions for each lane group
+                self.intersections[self.roadnetDict['intersections'][i]['id']] = [
+                                                                                  [len(self.roadnetDict['intersections'][i]['trafficLight']['lightphases'])],
+                                                                                  incomingLanes,
+                                                                                  outgoingLanes,
+                                                                                  directions
+                                                                                 ]
                 
 
+        print(self.intersections['intersection_1_2'])
 
-        
-        
-        print(len(self.roadnetDict['intersections'][5]['roadLinks']))
-        print(self.roadnetDict['intersections'][5]['roadLinks'][1]['type'])
-        print(self.roadnetDict['intersections'][5]['roadLinks'][1]['startRoad'])
-        print(self.roadnetDict['intersections'][5]['roadLinks'][1]['endRoad'])
-        print(len(self.roadnetDict['intersections'][5]['roadLinks'][1]['laneLinks']))
-        print(self.roadnetDict['intersections'][5]['roadLinks'][1]['laneLinks'][0]['startLaneIndex'])
-
-        testLane = self.roadnetDict['intersections'][5]['roadLinks'][1]['startRoad'] + '_' + str(self.roadnetDict['intersections'][5]['roadLinks'][1]['laneLinks'][0]['startLaneIndex'])
-
-        eng = cityflow.Engine(configPath, thread_num=1)
+        self.eng = cityflow.Engine(configPath, thread_num=1)
 
         for i in range(1000):
-            eng.next_step()
+            self.eng.next_step()
 
+        testLane = self.roadnetDict['intersections'][5]['roadLinks'][1]['startRoad'] + '_' + str(self.roadnetDict['intersections'][5]['roadLinks'][1]['laneLinks'][0]['startLaneIndex'])
         self.lane_waiting_vehicles_dict = eng.get_lane_waiting_vehicle_count()
         print(self.lane_waiting_vehicles_dict[testLane])
         self.waitingDict = eng.get_lane_vehicles()
-        print(eng.get_vehicle_info("flow_1_0"))
-
 
         raise NotImplementedError
 
