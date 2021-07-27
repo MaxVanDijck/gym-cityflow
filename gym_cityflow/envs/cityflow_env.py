@@ -1,6 +1,7 @@
 import json
 import cityflow
 import gym
+import numpy as np
 from gym import error, spaces, utils
 from gym.utils import seeding
 
@@ -46,17 +47,24 @@ class Cityflow(gym.Env):
                                                                                  ]
                 
 
-        print(self.intersections['intersection_1_2'])
+        print(self.intersections['intersection_1_2'][1])
 
         self.eng = cityflow.Engine(configPath, thread_num=1)
 
         for i in range(1000):
             self.eng.next_step()
 
+        self.lane_waiting_vehicles_dict = self.eng.get_lane_waiting_vehicle_count()
+        for key in self.intersections:
+            for i in range(len(self.intersections[key][1])):
+                for j in range(len(self.intersections[key][1][i])):
+                    print([self.lane_waiting_vehicles_dict[self.intersections[key][1][i][j]], 
+                           self.lane_waiting_vehicles_dict[self.intersections[key][2][i][j]]])
+
         testLane = self.roadnetDict['intersections'][5]['roadLinks'][1]['startRoad'] + '_' + str(self.roadnetDict['intersections'][5]['roadLinks'][1]['laneLinks'][0]['startLaneIndex'])
-        self.lane_waiting_vehicles_dict = eng.get_lane_waiting_vehicle_count()
+        self.lane_waiting_vehicles_dict = self.eng.get_lane_waiting_vehicle_count()
         print(self.lane_waiting_vehicles_dict[testLane])
-        self.waitingDict = eng.get_lane_vehicles()
+        self.waitingDict = self.eng.get_lane_vehicles()
 
         raise NotImplementedError
 
