@@ -49,8 +49,6 @@ class Cityflow(gym.Env):
         # create cityflow engine
         self.eng = cityflow.Engine(configPath, thread_num=1)  
 
-        raise NotImplementedError
-
     def step(self, action):
         #change lightphases according to the action
         #env step
@@ -68,10 +66,12 @@ class Cityflow(gym.Env):
                            self.lane_waiting_vehicles_dict[self.intersections[key][2][i][j]]])
             self.waitingNetwork.append(waitingIntersection)
 
+        #TODO: create reward function
+
+        #TODO: Detect if Simulation is finshed for done variable
+
         #return observation, reward, done, info
         return self.observation
-
-        raise NotImplementedError
 
     def reset(self):
         raise NotImplementedError
