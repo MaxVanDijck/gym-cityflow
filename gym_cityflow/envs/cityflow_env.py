@@ -51,12 +51,15 @@ class Cityflow(gym.Env):
 
     def step(self, action):
         #TODO: change lightphases according to the action
+        for key in self.intersections:
+            print(key)
         #env step
         self.eng.next_step()
         #observation
         #get arrays of waiting cars on input lane vs waiting cars on output lane for each intersection
         self.lane_waiting_vehicles_dict = self.eng.get_lane_waiting_vehicle_count()
         self.observation = []
+        self.waitingNetwork = []
         for key in self.intersections:
             waitingIntersection=[]
             waitingIntersection.append(key)
