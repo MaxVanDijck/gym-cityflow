@@ -50,7 +50,7 @@ class Cityflow(gym.Env):
         self.eng = cityflow.Engine(configPath, thread_num=1)  
 
     def step(self, action):
-        #change lightphases according to the action
+        #TODO: change lightphases according to the action
         #env step
         self.eng.next_step()
         #observation
