@@ -46,20 +46,29 @@ class Cityflow(gym.Env):
                                                                                   directions
                                                                                  ]
 
+        #setup intersectionNames list for agent actions
+        self.intersectionNames = []
+        for key in self.intersections:
+            self.intersectionNames.append(key)
+
         # create cityflow engine
         self.eng = cityflow.Engine(configPath, thread_num=1)  
 
     def step(self, action):
-        #TODO: change lightphases according to the action
-        for key in self.intersections:
-            print(key)
+        #Check that input action size is equal to number of intersections
+        if len(action) != len(self.intersectionNames):
+            raise Warning('Action length not equal to number of intersections')
+
+        #Set each trafficlight phase to specified action
+        for i in range(len(self.intersectionNames)):
+            self.eng.set_tl_phase(self.intersectionNames[i], action[i])
+
         #env step
         self.eng.next_step()
         #observation
         #get arrays of waiting cars on input lane vs waiting cars on output lane for each intersection
         self.lane_waiting_vehicles_dict = self.eng.get_lane_waiting_vehicle_count()
         self.observation = []
-        self.waitingNetwork = []
         for key in self.intersections:
             waitingIntersection=[]
             waitingIntersection.append(key)
@@ -67,7 +76,7 @@ class Cityflow(gym.Env):
                 for j in range(len(self.intersections[key][1][i])):
                     waitingIntersection.append([self.lane_waiting_vehicles_dict[self.intersections[key][1][i][j]], 
                            self.lane_waiting_vehicles_dict[self.intersections[key][2][i][j]]])
-            self.waitingNetwork.append(waitingIntersection)
+            self.observation.append(waitingIntersection)
 
         #TODO: create reward function
 
