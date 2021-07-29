@@ -79,11 +79,11 @@ class Cityflow(gym.Env):
             self.observation.append(waitingIntersection)
 
         #TODO: create reward function
-
+        self.reward = self.reward()
         #TODO: Detect if Simulation is finshed for done variable
 
         #return observation, reward, done, info
-        return self.observation
+        return self.observation, self.reward
 
     def reset(self):
         raise NotImplementedError
@@ -92,4 +92,14 @@ class Cityflow(gym.Env):
         raise NotImplementedError
 
     def close(self):
+        raise NotImplementedError
+
+    def reward(self):
+        reward = []
+        self.lane_vehicles = self.eng.get_lane_vehicles()
+        #for intersection in dict check the numbet of waiitng vehicles on the lane
+        for key in self.intersections:
+            for i in range(len(self.intersections[key][1])):
+                for j in range(len(self.intersections[key][1][i])):
+                    print(self.lane_vehicles[self.intersections[key][1][i][j]])
         raise NotImplementedError
