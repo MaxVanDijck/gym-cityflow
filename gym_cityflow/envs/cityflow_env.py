@@ -96,10 +96,16 @@ class Cityflow(gym.Env):
 
     def reward(self):
         reward = []
+        self.vehicle_speeds = self.eng.get_vehicle_speed()
         self.lane_vehicles = self.eng.get_lane_vehicles()
-        #for intersection in dict check the numbet of waiitng vehicles on the lane
+        #for intersection in dict retrieve names of waiting vehicles
         for key in self.intersections:
             for i in range(len(self.intersections[key][1])):
                 for j in range(len(self.intersections[key][1][i])):
-                    print(self.lane_vehicles[self.intersections[key][1][i][j]])
+                    vehicle = self.lane_vehicles[self.intersections[key][1][i][j]]
+                    #if lane is empty continue
+                    if len(vehicle) == 0:
+                        continue
+                    elif self.vehicle_speeds[vehicle[0]] < 0.1:
+                        print(vehicle)
         raise NotImplementedError
