@@ -13,6 +13,7 @@ class Cityflow(gym.Env):
         self.configDict = json.load(open(configPath))
         #open cityflow roadnet file into dict
         self.roadnetDict = json.load(open(self.configDict['dir'] + self.configDict['roadnetFile']))
+    
 
         # create dict of controllable intersections and number of light phases
         self.intersections = {}
@@ -54,6 +55,9 @@ class Cityflow(gym.Env):
         # create cityflow engine
         self.eng = cityflow.Engine(configPath, thread_num=1)  
 
+        #Waiting dict for reward function
+        self.waiting_vehicles_reward = {}
+
     def step(self, action):
         #Check that input action size is equal to number of intersections
         if len(action) != len(self.intersectionNames):
@@ -79,7 +83,7 @@ class Cityflow(gym.Env):
             self.observation.append(waitingIntersection)
 
         #TODO: create reward function
-        self.reward = self.reward()
+        self.reward = self.getReward()
         #TODO: Detect if Simulation is finshed for done variable
 
         #return observation, reward, done, info
@@ -94,10 +98,11 @@ class Cityflow(gym.Env):
     def close(self):
         raise NotImplementedError
 
-    def reward(self):
+    def getReward(self):
         reward = []
         self.vehicle_speeds = self.eng.get_vehicle_speed()
         self.lane_vehicles = self.eng.get_lane_vehicles()
+
         #for intersection in dict retrieve names of waiting vehicles
         for key in self.intersections:
             for i in range(len(self.intersections[key][1])):
@@ -106,6 +111,10 @@ class Cityflow(gym.Env):
                     #if lane is empty continue
                     if len(vehicle) == 0:
                         continue
+                    #If vehicle is waiting check for it in dict
                     elif self.vehicle_speeds[vehicle[0]] < 0.1:
-                        print(vehicle)
-        raise NotImplementedError
+                        if vehicle[0] in self.waiting_vehicles_reward:
+                            self.waiting_vehicles_reward[vehicle[0]] = 0
+                        out = vehicle[0]
+        
+        return out
