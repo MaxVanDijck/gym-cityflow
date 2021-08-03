@@ -110,10 +110,11 @@ class Cityflow(gym.Env):
                     vehicle = self.lane_vehicles[self.intersections[key][1][i][j]]
                     #if lane is empty continue
                     if len(vehicle) == 0:
-                        continue
-                    #If vehicle is waiting check for it in dict
-                    elif self.vehicle_speeds[vehicle[0]] < 0.1:
-                        if vehicle[0] not in self.waiting_vehicles_reward:
-                            self.waiting_vehicles_reward[vehicle[0]] = 0
+                            continue
+                    for k in range(len(vehicle)):
+                        #If vehicle is waiting check for it in dict
+                        if self.vehicle_speeds[vehicle[k]] < 0.1:
+                            if vehicle[k] not in self.waiting_vehicles_reward:
+                                self.waiting_vehicles_reward[vehicle[k]] = 0
         
         return self.waiting_vehicles_reward
