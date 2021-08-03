@@ -105,10 +105,13 @@ class Cityflow(gym.Env):
 
         #list of waiting vehicles
         waitingVehicles = []
+        reward = []
 
         #for intersection in dict retrieve names of waiting vehicles
         for key in self.intersections:
             for i in range(len(self.intersections[key][1])):
+                #reward val
+                intersectionReward = 0
                 for j in range(len(self.intersections[key][1][i])):
                     vehicle = self.lane_vehicles[self.intersections[key][1][i][j]]
                     #if lane is empty continue
@@ -122,6 +125,9 @@ class Cityflow(gym.Env):
                                 self.waiting_vehicles_reward[vehicle[k]] = 1
                             else:
                                 self.waiting_vehicles_reward[vehicle[k]] += 1
+                            #calculate reward for intersection
+                            intersectionReward += -np.exp(self.waiting_vehicles_reward[vehicle[k]])
+            reward.append([key, intersectionReward])
 
         waitingVehiclesRemove = []
         for key in self.waiting_vehicles_reward:
@@ -133,4 +139,4 @@ class Cityflow(gym.Env):
         for item in waitingVehiclesRemove:
             self.waiting_vehicles_reward.pop(item)
         
-        return self.waiting_vehicles_reward
+        return reward
