@@ -14,4 +14,5 @@ for i in range(1000):
     observation, reward = env.step(action=testAction)
 
 observation, reward = env.step(action=testAction)
-#print(observation)
+print(observation)
+print(reward)
