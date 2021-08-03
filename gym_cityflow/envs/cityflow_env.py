@@ -113,8 +113,7 @@ class Cityflow(gym.Env):
                         continue
                     #If vehicle is waiting check for it in dict
                     elif self.vehicle_speeds[vehicle[0]] < 0.1:
-                        if vehicle[0] in self.waiting_vehicles_reward:
+                        if vehicle[0] not in self.waiting_vehicles_reward:
                             self.waiting_vehicles_reward[vehicle[0]] = 0
-                        out = vehicle[0]
         
-        return out
+        return self.waiting_vehicles_reward
