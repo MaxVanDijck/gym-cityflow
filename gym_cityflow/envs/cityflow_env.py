@@ -103,6 +103,9 @@ class Cityflow(gym.Env):
         self.vehicle_speeds = self.eng.get_vehicle_speed()
         self.lane_vehicles = self.eng.get_lane_vehicles()
 
+        #list of waiting vehicles
+        waitingVehicles = []
+
         #for intersection in dict retrieve names of waiting vehicles
         for key in self.intersections:
             for i in range(len(self.intersections[key][1])):
@@ -114,7 +117,20 @@ class Cityflow(gym.Env):
                     for k in range(len(vehicle)):
                         #If vehicle is waiting check for it in dict
                         if self.vehicle_speeds[vehicle[k]] < 0.1:
+                            waitingVehicles.append(vehicle[k])
                             if vehicle[k] not in self.waiting_vehicles_reward:
-                                self.waiting_vehicles_reward[vehicle[k]] = 0
+                                self.waiting_vehicles_reward[vehicle[k]] = 1
+                            else:
+                                self.waiting_vehicles_reward[vehicle[k]] += 1
+
+        waitingVehiclesRemove = []
+        for key in self.waiting_vehicles_reward:
+            if key in waitingVehicles:
+                continue
+            else:
+                waitingVehiclesRemove.append(key)
+
+        for item in waitingVehiclesRemove:
+            self.waiting_vehicles_reward.pop(item)
         
         return self.waiting_vehicles_reward
