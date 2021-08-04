@@ -125,8 +125,11 @@ class Cityflow(gym.Env):
                                 self.waiting_vehicles_reward[vehicle[k]] = 1
                             else:
                                 self.waiting_vehicles_reward[vehicle[k]] += 1
-                            #calculate reward for intersection
-                            intersectionReward += -np.exp(self.waiting_vehicles_reward[vehicle[k]])
+                            #calculate reward for intersection, cap value to -2e+200
+                            if intersectionReward < -2e+200:
+                                intersectionReward += -np.exp(self.waiting_vehicles_reward[vehicle[k]])
+                            else:
+                                intersectionReward = -2e+200
             reward.append([key, intersectionReward])
 
         waitingVehiclesRemove = []
