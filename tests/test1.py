@@ -8,6 +8,8 @@ env = gym.make('gym_cityflow:cityflow-v0',
                configPath = 'sample_data/sample_config.json',
                episodeSteps = 1000)
 
+#Check action space
+print(env.action_space)
 
 #disable print temporarily
 #iterate environment a lttle bit to test env

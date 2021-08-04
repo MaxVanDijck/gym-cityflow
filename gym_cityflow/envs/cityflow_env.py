@@ -9,14 +9,15 @@ class Cityflow(gym.Env):
     metadata = {'render.modes': ['human']}
 
     def __init__(self, configPath, episodeSteps):
-        #open cityflow config file into dict
-        self.configDict = json.load(open(configPath))
-        #open cityflow roadnet file into dict
-        self.roadnetDict = json.load(open(self.configDict['dir'] + self.configDict['roadnetFile']))
         #steps per episode
         self.steps_per_episode = episodeSteps
         self.is_done = False
         self.current_step = 0
+
+        #open cityflow config file into dict
+        self.configDict = json.load(open(configPath))
+        #open cityflow roadnet file into dict
+        self.roadnetDict = json.load(open(self.configDict['dir'] + self.configDict['roadnetFile']))
 
         # create dict of controllable intersections and number of light phases
         self.intersections = {}
@@ -54,6 +55,12 @@ class Cityflow(gym.Env):
         self.intersectionNames = []
         for key in self.intersections:
             self.intersectionNames.append(key)
+
+        #define action space MultiDiscrete()
+        actionSpaceArray = []
+        for key in self.intersections:
+            actionSpaceArray.append(self.intersections[key][0][0])
+        self.action_space = spaces.MultiDiscrete(actionSpaceArray)
 
         # create cityflow engine
         self.eng = cityflow.Engine(configPath, thread_num=1)  
