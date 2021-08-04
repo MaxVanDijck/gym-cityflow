@@ -6,7 +6,7 @@ import random
 
 env = gym.make('gym_cityflow:cityflow-v0', 
                configPath = 'sample_data/sample_config.json',
-               episodeSteps = 2000)
+               episodeSteps = 1000)
 
 
 #disable print temporarily
@@ -15,7 +15,6 @@ actionInterval = 10
 
 for i in range(10000):
     if i % actionInterval == 0:
-        print(i)
         testAction = []
         for i in range(0,16):
             n = random.randint(0,8)
