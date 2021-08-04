@@ -8,12 +8,15 @@ from gym.utils import seeding
 class Cityflow(gym.Env):
     metadata = {'render.modes': ['human']}
 
-    def __init__(self, configPath):
+    def __init__(self, configPath, episodeSteps):
         #open cityflow config file into dict
         self.configDict = json.load(open(configPath))
         #open cityflow roadnet file into dict
         self.roadnetDict = json.load(open(self.configDict['dir'] + self.configDict['roadnetFile']))
-    
+        #steps per episode
+        self.steps_per_episode = episodeSteps
+        self.is_done = False
+        self.current_step = 0
 
         # create dict of controllable intersections and number of light phases
         self.intersections = {}
@@ -82,12 +85,16 @@ class Cityflow(gym.Env):
                            self.lane_waiting_vehicles_dict[self.intersections[key][2][i][j]]])
             self.observation.append(waitingIntersection)
 
-        #TODO: create reward function
+        #reward
         self.reward = self.getReward()
-        #TODO: Detect if Simulation is finshed for done variable
+        #Detect if Simulation is finshed for done variable
+        self.current_step += 1
+
+        if self.current_step + 1 == self.steps_per_episode:
+            self.is_done = True
 
         #return observation, reward, done, info
-        return self.observation, self.reward
+        return self.observation, self.reward, self.is_done, {}
 
     def reset(self):
         raise NotImplementedError
