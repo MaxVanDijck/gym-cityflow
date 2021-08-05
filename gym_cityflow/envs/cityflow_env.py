@@ -18,6 +18,7 @@ class Cityflow(gym.Env):
         self.configDict = json.load(open(configPath))
         #open cityflow roadnet file into dict
         self.roadnetDict = json.load(open(self.configDict['dir'] + self.configDict['roadnetFile']))
+        self.flowDict = json.load(open(self.configDict['dir'] + self.configDict['flowFile']))
 
         # create dict of controllable intersections and number of light phases
         self.intersections = {}
@@ -62,6 +63,21 @@ class Cityflow(gym.Env):
             actionSpaceArray.append(self.intersections[key][0][0])
         self.action_space = spaces.MultiDiscrete(actionSpaceArray)
 
+        # define observation space
+        observationSpaceDict = {}
+        for key in self.intersections:
+            totalCount = 0
+            for i in range(len(self.intersections[key][1])):
+                totalCount += len(self.intersections[key][1][i])
+
+            intersectionObservation = []
+            maxVehicles = len(self.flowDict)
+            for i in range(totalCount):
+                intersectionObservation.append([maxVehicles, maxVehicles])
+
+            observationSpaceDict[key] = spaces.MultiDiscrete(intersectionObservation)
+        self.observation_space = spaces.Dict(observationSpaceDict)
+
         # create cityflow engine
         self.eng = cityflow.Engine(configPath, thread_num=1)  
 
@@ -82,15 +98,14 @@ class Cityflow(gym.Env):
         #observation
         #get arrays of waiting cars on input lane vs waiting cars on output lane for each intersection
         self.lane_waiting_vehicles_dict = self.eng.get_lane_waiting_vehicle_count()
-        self.observation = []
+        self.observation = {}
         for key in self.intersections:
             waitingIntersection=[]
-            waitingIntersection.append(key)
             for i in range(len(self.intersections[key][1])):
                 for j in range(len(self.intersections[key][1][i])):
                     waitingIntersection.append([self.lane_waiting_vehicles_dict[self.intersections[key][1][i][j]], 
                            self.lane_waiting_vehicles_dict[self.intersections[key][2][i][j]]])
-            self.observation.append(waitingIntersection)
+            self.observation[key] = waitingIntersection
 
         #reward
         self.reward = self.getReward()

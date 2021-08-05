@@ -10,6 +10,7 @@ env = gym.make('gym_cityflow:cityflow-v0',
 
 #Check action space
 print(env.action_space)
+print(env.observation_space)
 
 #disable print temporarily
 #iterate environment a lttle bit to test env
