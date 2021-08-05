@@ -96,16 +96,7 @@ class Cityflow(gym.Env):
         #env step
         self.eng.next_step()
         #observation
-        #get arrays of waiting cars on input lane vs waiting cars on output lane for each intersection
-        self.lane_waiting_vehicles_dict = self.eng.get_lane_waiting_vehicle_count()
-        self.observation = {}
-        for key in self.intersections:
-            waitingIntersection=[]
-            for i in range(len(self.intersections[key][1])):
-                for j in range(len(self.intersections[key][1][i])):
-                    waitingIntersection.append([self.lane_waiting_vehicles_dict[self.intersections[key][1][i][j]], 
-                           self.lane_waiting_vehicles_dict[self.intersections[key][2][i][j]]])
-            self.observation[key] = waitingIntersection
+        self.observation = self._get_observation()
 
         #reward
         self.reward = self.getReward()
@@ -119,13 +110,29 @@ class Cityflow(gym.Env):
         return self.observation, self.reward, self.is_done, {}
 
     def reset(self):
-        raise NotImplementedError
+        self.eng.reset()
+        return self._get_observation()
 
     def render(self, mode='human'):
         raise NotImplementedError
 
     def close(self):
         raise NotImplementedError
+
+    def _get_observation(self):
+        #observation
+        #get arrays of waiting cars on input lane vs waiting cars on output lane for each intersection
+        self.lane_waiting_vehicles_dict = self.eng.get_lane_waiting_vehicle_count()
+        self.observation = {}
+        for key in self.intersections:
+            waitingIntersection=[]
+            for i in range(len(self.intersections[key][1])):
+                for j in range(len(self.intersections[key][1][i])):
+                    waitingIntersection.append([self.lane_waiting_vehicles_dict[self.intersections[key][1][i][j]], 
+                           self.lane_waiting_vehicles_dict[self.intersections[key][2][i][j]]])
+            self.observation[key] = waitingIntersection
+
+        return self.observation
 
     def getReward(self):
         reward = []

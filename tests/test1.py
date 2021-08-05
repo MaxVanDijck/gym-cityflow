@@ -29,3 +29,6 @@ for i in range(10000):
 observation, reward, done, debug = env.step(action=testAction)
 print(observation)
 print(reward)
+
+observation = env.reset()
+print(observation)
