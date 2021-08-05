@@ -116,9 +116,6 @@ class Cityflow(gym.Env):
     def render(self, mode='human'):
         print("Current time: " + self.cityflow.get_current_time())
 
-    def close(self):
-        raise NotImplementedError
-
     def _get_observation(self):
         #observation
         #get arrays of waiting cars on input lane vs waiting cars on output lane for each intersection
