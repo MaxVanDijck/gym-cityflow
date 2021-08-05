@@ -114,7 +114,7 @@ class Cityflow(gym.Env):
         return self._get_observation()
 
     def render(self, mode='human'):
-        raise NotImplementedError
+        print("Current time: " + self.cityflow.get_current_time())
 
     def close(self):
         raise NotImplementedError
