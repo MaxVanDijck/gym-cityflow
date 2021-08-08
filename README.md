@@ -19,3 +19,23 @@ env = gym.make('gym_cityflow:cityflow-v0',
                configPath = 'sample_path/sample_config.json',
                episodeSteps = 3600)
 ```
+
+## Basic Functionality
+
+The action and observation space can be check like so:
+
+```python
+observationSpace = env.observation_space
+actionSpace = env.action_space
+```
+
+`env.step()` can be called to step the environment, it returns an observation, reward, done and debug as specified in the [OpenAI Documentation](https://gym.openai.com/docs/)
+
+`env.reset()` can be called to restart the environment
+
+```python
+observation, reward, done, debug = env.step(action=sampleAction)
+
+if done:
+    env.reset()
+```
