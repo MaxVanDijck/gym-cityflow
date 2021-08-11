@@ -111,6 +111,7 @@ class Cityflow(gym.Env):
 
     def reset(self):
         self.eng.reset()
+        self.is_done = False
         return self._get_observation()
 
     def render(self, mode='human'):
