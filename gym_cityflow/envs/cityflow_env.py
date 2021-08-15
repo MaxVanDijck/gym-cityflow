@@ -110,7 +110,7 @@ class Cityflow(gym.Env):
         return self.observation, self.reward, self.is_done, {}
 
     def reset(self):
-        self.eng.reset()
+        self.eng.reset(seed=False)
         self.is_done = False
         self.current_step = 0
         return self._get_observation()
@@ -178,3 +178,6 @@ class Cityflow(gym.Env):
             self.waiting_vehicles_reward.pop(item)
         
         return reward
+
+    def seed(self, seed=None):
+        self.eng.set_random_seed(seed)
