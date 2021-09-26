@@ -182,7 +182,7 @@ class Cityflow(gym.Env):
         
         return reward
 
-    def getReward_nonExp():
+    def getReward_nonExp(self):
         reward = []
         self.vehicle_speeds = self.eng.get_vehicle_speed()
         self.lane_vehicles = self.eng.get_lane_vehicles()
