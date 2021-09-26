@@ -162,7 +162,7 @@ class Cityflow(gym.Env):
                                 self.waiting_vehicles_reward[vehicle[k]] += 1
                             #calculate reward for intersection, cap value to -2e+200
                             if intersectionReward > -1e+200:
-                                if self.waiting_vehicles_reward[vehicle[k]] < 460
+                                if self.waiting_vehicles_reward[vehicle[k]] < 460:
                                     intersectionReward += -np.exp(self.waiting_vehicles_reward[vehicle[k]])
                                 else:
                                     intersectionReward += -1e-200
