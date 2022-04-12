@@ -15,7 +15,7 @@ NOTE: configPath must be a valid cityflow `config.json` file, episodeSteps is ho
 import gym
 import gym_cityflow
 
-env = gym.make('gym_cityflow:cityflow-v0', 
+env = gym.make('cityflow-v0', 
                configPath = 'sample_path/sample_config.json',
                episodeSteps = 3600)
 ```
