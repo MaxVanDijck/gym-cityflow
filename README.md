@@ -2,6 +2,10 @@
 
 `gym_cityflow` is a custom OpenAI gym environment designed to handle any cityflow config file.
 
+## Prerequisites
+OpenAI Gym: https://gym.openai.com/docs/
+CityFlow: https://cityflow.readthedocs.io/en/latest/install.html
+
 ## Installation
 
 `gym_cityflow` can be installed by running the following at the root directory of the repository:
